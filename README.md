@@ -3,5 +3,5 @@ This is a project for school called "Zeg-Game".
 
 
 <hr>
-Start at --> 26/03/2026
+Start at --> 26/03/2026<br>
 Deadline --> 08/06/2026
