@@ -1,43 +1,44 @@
-// some ugly variables to track which keys are pressed
-pressedUp = false;
+pressedUp = false;                  // some ugly variables to track which keys are pressed
 pressedDown = false;
 pressedLeft = false;
 pressedRight = false;
 
-
 class Player {
     x;
     y;
-
+    speed=6;       
+    
     constructor(x, y) {
         this.x = x;
         this.y = y;
     }
 
-    // ... well, that thing makes player move, duh
-    update() {
+    
+    update() {                      // updates every frame and makes player move
         if (pressedUp) {
-            this.y -= 5;
+            this.y -= this.speed;
         }
         if (pressedDown) {
-            this.y += 5;
+            this.y += this.speed;
         }
         if (pressedLeft) {
-            this.x -= 5;
+            this.x -= this.speed;
         }
         if (pressedRight) {
-            this.x += 5;
+            this.x += this.speed;
         }
     }
 
-    create() {
+    create() {                      // creates player as a white rectangle (square)
         fill(255);
         rect(this.x, this.y, 50, 50);
+
     }
+
 }
 
-// that checks if something was pressed on keyboard
-function keyPressed() {
+
+function keyPressed() {             // that checks if something was pressed on keyboard
     if (keyCode === UP_ARROW) {
         pressedUp = true;
     }
@@ -52,8 +53,8 @@ function keyPressed() {
     }
 }
 
-// i mean.. i could add some fighting keys here later..
-function keyReleased() {
+
+function keyReleased() {            // tracks keys that were released for player stopping movement
     if (keyCode === UP_ARROW) {
         pressedUp = false;
     }

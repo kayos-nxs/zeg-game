@@ -1,18 +1,36 @@
-// that thing creates canvas and creates player
-function setup() {
-    createCanvas(1200, 900);
-    player = new Player(width/2, height/2);
+function setup() {                                                  // that thing creates canvas and here you
+                                                                    // can define variables and stuff
+    createCanvas(1201, 900);    
+    player = new Player(100/2 + 150, 2450);
+    level = new Level("Limbo");                                     // level names:
+                                                                    // Limbo
+                                                                    // Lust 
+                                                                    // Gluttony
+                                                                    // Greed
+                                                                    // Wrath
+                                                                    // Heresy
+                                                                    // Violence
+                                                                    // Fraud
+                                                                    // Treachery
 }
 
-// that thing updates every frame and
-// draws everything on screen
-function draw() {
-    background(51);             // clear every frame
-    
-    fill(0);                    // make text black
-    textSize(100);
-    text("Hello World", 100, 100);
+function draw() {                                                   // that thing updates every frame and draws everything on screen
+    background(51);                                                 // clear every frame
 
-    player.update();            // player movement
-    player.create();            // create player
+    push();                                                         // HERE STARTS SOME CAMERA LOGIC!!!11!
+    translate(width / 2 - player.x, height / 2 - player.y);         // makes camera move
+
+    level.drawLevel();                                              // draws the level
+
+    player.update();                                                // player movement
+    player.create();                                                // create player
+    pop();                                                          // HERE ENDS CAMERA LOGIC!11!!!!!
+
+    fill(0);                                                        // make text black
+    textSize(60);
+    text(level.name, -5,44);
+
+    
+
+    
 }
