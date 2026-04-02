@@ -1,12 +1,17 @@
-window.addEventListener("keydown", function(e) {           // track down key that are being pressed
+// keyboard handling and stuff
 
-    if (e.key === "k") {           // will enable debug stuff, that will show 
-        debug = !debug;            // for example x and y coordinates
+// track down key that are being pressed
+window.addEventListener("keydown", function(e) {           
+
+    if (e.key === "k") { // will enable debug stuff, that will show 
+        debug = !debug;  // for example x and y coordinates
         console.log("debug mode: " + debug);
         document.getElementById("debug").style.visibility = debug ? "visible" : "hidden";
     }
 
-    if (e.key === "w") {           // player movement
+
+    // player movement
+    if (e.key === "w") { 
         wPressed = true;
     }
     if (e.key === "a") {
@@ -18,11 +23,27 @@ window.addEventListener("keydown", function(e) {           // track down key tha
     if (e.key === "d") {
         dPressed = true;
     }
+
+    // PLACEHOLDER!!
+    if (e.key === "r") {
+        // guess who's finally getting his powers! he-he..
+    }
+    if (e.key === "e") {
+        // are you sure?
+    }
+    if (e.key === "-") {
+        // pretty sure.. threw a trashbag into space, at work
+    }
+    if (e.key === "=") {
+        // well, son that's great!
+    }
 });
 
-window.addEventListener("keyup", function(e) {           // track down key that are being released
-
-    if (e.key === "w") {           // player movement
+// track down key that are being released
+window.addEventListener("keyup", function(e) { 
+    
+    // player movement
+    if (e.key === "w") { 
         wPressed = false;
     }
     if (e.key === "a") {
@@ -34,6 +55,21 @@ window.addEventListener("keyup", function(e) {           // track down key that 
     if (e.key === "d") {
         dPressed = false;
     }
+    
+    // PLACEHOLDER!!
+    if (e.key === "r") {
+        // guess who's finally getting his powers! he-he..
+    }
+    if (e.key === "e") {
+        // are you sure?
+    }
+    if (e.key === "-") {
+        // pretty sure.. threw a trashbag into space, at work
+    }
+    if (e.key === "=") {
+        // well, son that's great!
+    }
+
 });
 
 

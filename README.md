@@ -1,4 +1,4 @@
-# Zeg Game - Labirynth
+# Zeg Game - Labyrinth
 ### A project made for school.
 
 This is a labyrinth game with enemies and riddles that player has to go through.
