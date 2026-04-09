@@ -24,6 +24,11 @@ class Entity { // main class for handling every entity
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
+    removeEntity() {
+        // TODO: 
+        // *    add entity removing method
+    }
+
 }
 
 class Player extends Entity { // player class that uses entity class as a base
