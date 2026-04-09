@@ -1,19 +1,23 @@
-// main game stuff, here i will create game
-// *    player.js --> for player class
-// *    main.js --> main game stuff
-// *    keyboard.js --> keyboard input handling and etc.
-// *    map.js --> map maker
-// *    entity.js --> player and enemies
+// FILES:
+// *     player.js --> for player class
+// *     main.js --> main game stuff
+// *     keyboard.js --> keyboard input handling and etc.
+// *     map.js --> map maker
+// *     entity.js --> player and enemies
+// *     cutscene_handler.js --> handle cutscenes, start the one you need
 
 // TODO:
-// * map generator: X
-// * add player movement: X
-// ________________________
-// * add limited vision
-// * add final boss
-// * add 6 slots for items
-// * fighting
-// * add hp and healing items
+// *     map generator: X
+// *     add player movement: X
+//       ________________________________________________________________________________________________________________________________________
+// *     add win and gameover screen
+// *     add camera close to player, maybe it will show 80x80 tiles instead of 20, don't show any other tile beside the ones you can actually see
+// *     add cutscenes
+// *     add limited vision
+// *     add final boss
+// *     add 6 slots for items
+// *     add fighting mechanics
+// *     add items: healers, keys, weapons (knife, rock you can pick from the ground)
 
 // canvas
 const c = document.getElementById("myCanvas"); // get canvas from html
