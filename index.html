@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>game</title>
+    <title>Zeg Game</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+
+
+
 <body>
+    <header id="headerB">
+        <h1 class="zeg">Zeg Game</h1>
+    </header>
 
-<canvas id="myCanvas" style="border:1px solid grey"></canvas>
+    <main>
+        <canvas id="myCanvas"  style="border:1px solid grey; background-color: black;">
+        </canvas>
+        <!-- <img id="wonScreen" src="assets/have passed.png" alt="you won screen" style="visibility: hidden; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;"> -->
+    </main>
 
-<!-- ./ASSETS FOLDER IS UNUSED for now..-->
+    <footer id="footerB">
+        <h1 class="zeg">Zeg Game</h1>
+        <button style="width:150px; height:60px; position: relative; left: -40%;" onclick="startGame()">Play</button>
+    </footer>
+</body>
 
 <script src="scripts/entity.js"></script> 
 <script src="scripts/map.js"></script> 
@@ -12,5 +32,10 @@
 <script src="scripts/debug.js"></script>
 <script src="scripts/keyboard.js"></script>
 
-</body>
+
+
+
+
+
+</body> -->
 </html>

@@ -1,8 +1,8 @@
 // a map handler and stuff! here map will be created
 
 const COLS = 41;
-const ROWS = 41;
-const TILE_SIZE = 20;
+const ROWS = 35;
+const TILE_SIZE = 80;
 
 // array for map:
 // *    0 - empty
@@ -18,6 +18,32 @@ let maze = Array(ROWS) // fill array with walls and empty cells
 // console.log(maze);
 
 
+function createEndCell(finishRow, finishColumn, endRow, endColumn) {
+    if (maze[finishRow][finishColumn] == 1) {  // if finishRow and finishColumn are in walls, 
+                                            // then clear the wall out to create a normal 
+                                            // path to it
+        for (let row = endRow; row >= 1; row--) {
+            for (let col = endColumn; col >= 1; col--) {
+                if (maze[row][col] == 0) {
+                    finishRow = row;
+                    finishColumn = col;
+                    row = -1; // break outer
+                    break;
+                }
+            }
+        }
+    }
+}
+
+function resetArray() {
+    for (let row = 0; row < ROWS; row++) { // it will help for regenerating, because it will
+                                           // use reset the array and fill it with 1s (walls)
+        for (let col = 0; col < COLS; col++) {
+            maze[row][col] = 1; // fill the maze with walls
+        }
+    }
+}
+
 // thank you, some random C tutorials and guy from Youtube
 function createMap() { // create map
     const startRow = 1;
@@ -25,12 +51,8 @@ function createMap() { // create map
     const endRow = ROWS - 2;
     const endCol = COLS - 2;
 
-    for (let row = 0; row < ROWS; row++) { // it will help for regenerating, because it will
-                                           // use reset the array and fill it with 1s (walls)
-        for (let col = 0; col < COLS; col++) {
-            maze[row][col] = 1; // fill the maze with walls
-        }
-    }
+    resetArray();   // reset array before creating new map, 
+                    // so it will be different every time
 
     // set start cell
     maze[startRow][startCol] = 0;
@@ -44,21 +66,22 @@ function createMap() { // create map
 
     // it will check if end cell is in walls, if it is
     // then clear the wall out to create a normal path to it
-    if (maze[finishRow][finishCol] == 1) {
-        for (let row = endRow; row >= 1; row--) {
-            for (let col = endCol; col >= 1; col--) {
-                if (maze[row][col] == 0) {
-                    finishRow = row;
-                    finishCol = col;
-                    row = -1; // break outer
-                    break;
-                }
-            }
-        }
-    }
-
+    createEndCell(finishRow, finishCol, endRow, endCol);
+    
     // place finish number in array for finish point
     maze[finishRow][finishCol] = 4;
+}
+
+function createWalls(newRow, newColumn, row, column, dr, dc) {
+    if (
+        newRow > 0 && newRow < ROWS - 1 && // check if new row and col are in bounds
+        newColumn > 0 && newColumn < COLS - 1 && // check if there is a wall in new row and col
+        maze[newRow][newColumn] == 1
+    ) {
+        maze[newRow][newColumn] = 0; // clear the wall in new row and col
+        maze[row + dr / 2][column + dc / 2] = 0; // clear the wall between current cell and new cell
+        carvePassage(newRow, newColumn); // move to new cell and repeat the process
+    }
 }
 
 function carvePassage(row, col) {
@@ -77,22 +100,13 @@ function carvePassage(row, col) {
         const newRow = row + dr; // new row and col that we want to move to
         const newCol = col + dc;
 
-
-        if (
-            newRow > 0 && newRow < ROWS - 1 && // check if new row and col are in bounds
-            newCol > 0 && newCol < COLS - 1 && // check if there is a wall in new row and col
-            maze[newRow][newCol] == 1
-        ) {
-            maze[newRow][newCol] = 0; // clear the wall in new row and col
-            maze[row + dr / 2][col + dc / 2] = 0; // clear the wall between current cell and new cell
-            carvePassage(newRow, newCol); // move to new cell and repeat the process
-        }
+        createWalls(newRow, newCol, row, col, dr, dc); // check if we can move to new cell and if we can, then move
+        
     }
 }
 
 
 function drawMap() { // draw the map on canvas
-    ctx.clearRect(0, 0, c.width, c.height); 
 
     for (let row = 0; row < ROWS; row++) { // for each row and col check if there is 
                                            // a wall or empty cell and draw it

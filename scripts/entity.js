@@ -2,6 +2,8 @@
 // enemies and players, maybe other entities
 // and stuff
 
+let youWonGame = false;
+
 class Entity { // main class for handling every entity
     x;
     y;
@@ -48,15 +50,14 @@ class Player extends Entity { // player class that uses entity class as a base
     }
 
     runCheckMove(nextRow, nextCol) { // checks for next cell for player to move to
-        if ((wPressed || aPressed || sPressed || dPressed) && maze[nextRow][nextCol] != 1) {
-            this.x = nextCol * TILE_SIZE; // if there is no wall, then move
-            this.y = nextRow * TILE_SIZE;
+        if ((upPressed || leftPressed || downPressed || rightPressed) && maze[nextRow][nextCol] != 1) {
+            this.x = nextCol * TILE_SIZE + 20; // if there is no wall, then move
+            this.y = nextRow * TILE_SIZE + 20;
             this.moveTimer = this.moveDelay; // adjust move timer
         }
-        if ((wPressed || aPressed || sPressed || dPressed) && maze[nextRow][nextCol] == 4) {
-            alert("PLACEHOLDER: you won!");
-            // ToDo:
-            // * go to another level
+        if ((upPressed || leftPressed || downPressed || rightPressed) && maze[nextRow][nextCol] == 4) {
+            // alert("PLACEHOLDER: you won!");
+            youWonGame = true; // if player reached finish point, then set youWon variable to true
 
         }
     }
@@ -66,10 +67,10 @@ class Player extends Entity { // player class that uses entity class as a base
         let nextRow = current.row;
         let nextCol = current.col;
 
-        if (wPressed) nextRow = current.row - 1;
-        if (sPressed) nextRow = current.row + 1;
-        if (aPressed) nextCol = current.col - 1;
-        if (dPressed) nextCol = current.col + 1;
+        if (upPressed) nextRow = current.row - 1;
+        if (downPressed) nextRow = current.row + 1;
+        if (leftPressed) nextCol = current.col - 1;
+        if (rightPressed) nextCol = current.col + 1;
 
         // moveTimer will help to make player move not every frame,
         // but with a delay, so it will be more smooth and not too fast
@@ -83,8 +84,8 @@ class Player extends Entity { // player class that uses entity class as a base
             this.runCheckMove(nextRow, nextCol); // i made it into another function,
                                                  // so it will be easier to read i guess
         } else {
-            this.x = nextCol * TILE_SIZE;
-            this.y = nextRow * TILE_SIZE;
+            this.x = nextCol * TILE_SIZE + 20;
+            this.y = nextRow * TILE_SIZE + 20;
             this.moveTimer = this.moveDelay; 
         }
     }
