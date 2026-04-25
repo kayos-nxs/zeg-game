@@ -40,9 +40,15 @@ let rightPressed = false;
 // SFX
 const music = new Audio('assets/SC.mp3');
 music.loop = true;
+music.volume = 0.3;
 // music.play();
 // music.playbackRate = 2;
 // music.pause();
+
+// FSS
+const footstepSound = new Audio('assets/fss.mp3');
+footstepSound.volume = 0.5;
+footstepSound.loop = true;
 
 // MAP
 createMap();
@@ -90,6 +96,21 @@ function update() { // main game loop will be called every frame
     if (playerCanMove) { // if player can move, then move player
         player.move(); // move player
     }
+    
+    // checks if any movement key (arrow keys) is currently pressed
+    let isMoving = upPressed || leftPressed || downPressed || rightPressed;
+
+    // check if player is allowed to move and is currently moving
+    if (playerCanMove && isMoving) {
+        if (footstepSound.paused) {
+            footstepSound.play();
+        }
+
+    } else { // if player is not moving or not allowed to move
+        footstepSound.pause();
+        footstepSound.currentTime = 0;
+    }
+    
     player.draw(); // draw player
     
     // CANVAS AND STUFF
