@@ -2,44 +2,58 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>game</title>
     <title>Zeg Game</title>
-    <link rel="stylesheet" href="assets/style.css">
 </head>
 
+<style>
+.rectangle {
+    width: 600px;
+    height: 100px;
+    background: silver;
+    margin: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+canvas {
+    display: block;
+}
+
+.mainGame {
+    width: 600px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    height: 90vh;          
+    width: 96vw;         
+} 
+</style>
 
 <body>
-    <header id="headerB">
-        <h1 class="zeg">Zeg Game</h1>
-    </header>
+    <div class="container"> <!-- Main container -->
+        <div class="mainGame"> <!-- Game container -->
 
-    <main>
-        <canvas id="myCanvas"  style="border:1px solid grey; background-color: black;">
-        </canvas>
-        <!-- <img id="wonScreen" src="assets/have passed.png" alt="you won screen" style="visibility: hidden; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;"> -->
-    </main>
+            <h1 class="rectangle">Zeg Game</h1> 
+            
+            <canvas id="myCanvas" width="600" height="550"></canvas>
+            
+            <div class="rectangle">
+                <button onclick="update();" style="width: 200px; height: 50px;">Graj</button>   <!-- Placeholder -->
+            </div>
+        </div>
+    </div>
 
-    <footer id="footerB">
-        <h1 class="zeg">Zeg Game</h1>
-        <button style="width:150px; height:60px; position: relative; left: -40%;" onclick="startGame()">Play</button>
-    </footer>
-
-<!-- 
-    <script src="scripts/entity.js"></script> 
-    <script src="scripts/map.js"></script> 
-    <script src="scripts/main.js"></script> 
-    <script src="scripts/debug.js"></script>
-    <script src="scripts/keyboard.js"></script> -->
-
+    <!-- Scripts -->
     <script src="scripts/objects.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/main.js"></script>
-
-
-
-
-
-
+    
 </body>
 </html>
