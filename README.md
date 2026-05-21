@@ -17,3 +17,13 @@
 <h2> Autorzy:</h2>
 — Kostia Korniienko;
 <br>— Danil Czebanow.
+<h2> Fabula:</h2>
+Przez całe życie żywił się cudzym cierpieniem. Manipulował ludźmi, niszczył relacje i doprowadzał innych do rozpaczy tylko po to, by poczuć kontrolę. Nigdy nikogo nie zabił własnymi rękami… ale kilka osób odebrało sobie życie po spotkaniu z nim.
+<br>
+Nigdy nie czuł winy.
+<br>
+Aż do swojej śmierci.
+<br>
+Zginął podczas nocnej jazdy samochodem. Padał deszcz. Ostatnią rzeczą, jaką zobaczył, były światła ciężarówki przecinające ciemność.
+<br>
+A potem obudził się w piekle.
