@@ -20,6 +20,8 @@ let goingLeft = false;
 let goingRight = false;
 let debug = false;
 
+let digitPressed;
+
 var endLevel = false;   // flag to check if level is finished
 
 // check for pressed keys and set movement flags
@@ -34,6 +36,14 @@ window.addEventListener('keydown', function(e) {
         goingRight = true;
     } else if (e.code === 'KeyF') {
         debug = !debug;
+    } else if (e.code === 'Digit1') {
+        digitPressed = 1;
+    } else if (e.code === 'Digit2') {
+        digitPressed = 2;
+    } else if (e.code === 'Digit3') {
+        digitPressed = 3;
+    } else if (e.code === 'Digit4') {
+        digitPressed = 4;
     }
 });
 
@@ -54,21 +64,21 @@ class Map {
     rows=14;
     cols=14;
 
-    // 2 - start    0 - empty
-    // 3 - finish   1 - wall
+    // 2 - start    0 - empty   6 - purple key      4 - yellow key   
+    // 3 - finish   1 - wall    7 - purple door     5 - yellow door
     map1 = [   
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1],
         [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 5, 1],
         [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1],
         [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
         [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 4, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
         [1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 3],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
@@ -121,6 +131,14 @@ class Map {
                     curColor = "red";
                 } else if (this.curMap[i][j] === 2){      // if start, set color to green
                     curColor = "green";
+                } else if (this.curMap[i][j] === 4){     
+                    curColor = "rgb(255, 254, 169)";
+                } else if (this.curMap[i][j] === 5){      
+                    curColor = "yellow";
+                } else if (this.curMap[i][j] === 6){     
+                    curColor = "rgb(168, 121, 221)";
+                } else if (this.curMap[i][j] === 7){      
+                    curColor = "purple";
                 
                 } else {
                     curColor = "gray";
@@ -180,10 +198,13 @@ class Entity {
 
 class Player extends Entity {
     items=[];   // for future slots/inventory system
+    selectedItem;
 
     constructor(x,y,hp,w,h,speed,items,color) {
         super(x,y,hp,w,h,speed,color);
         this.items = items;
+        this.speed = 7;
+        this.selectedItem = null;
     }
 
 
@@ -201,6 +222,10 @@ class Player extends Entity {
         const tileCol1 = Math.floor(newX / TILE_SIZE);
         const tileCol2 = Math.floor((newX + this.w - 1) / TILE_SIZE);
         
+
+        // 2 - start    0 - empty   6 - purple key      4 - yellow key   
+        // 3 - finish   1 - wall    7 - purple door     5 - yellow door
+
         const moved = newX !== this.x || newY !== this.y;       // check if player is really moving and not standing still
         let canMove = true;
         for (let r = tileRow1; r <= tileRow2; r++) {            // check all tiles the player would occupy after moving
@@ -213,6 +238,28 @@ class Player extends Entity {
                         // set endLevel and block movement immediately (synchronous)
                         endLevel = true;
                         canMove = false;    // prevent player from moving after reaching finish until level changes
+                    }
+                }
+                if (map.curMap[r][c] == 4) {
+                    this.items.push("yellow key");
+                    map.curMap[r][c] = 0;   // remove key from map
+                }
+                if (map.curMap[r][c] == 6) {
+                    this.items.push("purple key");
+                    map.curMap[r][c] = 0;   // remove key from map
+                }
+                if (map.curMap[r][c] == 7) {
+                    if (this.items.includes("purple key")) {
+                        map.curMap[r][c] = 0;   // remove door from map
+                    } else {
+                        canMove = false;
+                    }
+                }
+                if (map.curMap[r][c] == 5) {
+                    if (this.items.includes("yellow key")) {
+                        map.curMap[r][c] = 0;   // remove door from map
+                    } else {
+                        canMove = false;
                     }
                 }
             }
@@ -235,6 +282,8 @@ class Player extends Entity {
         render.push({x: c.width/2 - this.w/2, y: c.height/2 - this.h/2, color: this.color, w: this.w, h: this.h});
     }
 }
+
+
 
 function renderAll() {
     // this function renders everything from the render array to the canvas each frame

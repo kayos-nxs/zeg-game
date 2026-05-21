@@ -16,7 +16,51 @@ finishImage.onload = () => {
 };
 let levelChanging = false;
 
-   // for future level loading system, will be used to set map.curMap to the right map in map.maps array
+const invImg = new Image();
+invImg.src = "assets/gui/inv.png";
+let invImgLoaded = false;
+invImg.onload = () => {
+    invImgLoaded = true;
+};
+
+const keyImg = new Image();
+keyImg.src = "assets/gui/key.png";
+let keyImgLoaded = false;
+keyImg.onload = () => {
+    keyImgLoaded = true;
+};
+
+const selectedInvImg = new Image();
+selectedInvImg.src = "assets/gui/selected.png";
+let selectedInvImgLoaded = false;
+selectedInvImg.onload = () => {
+    selectedInvImgLoaded = true;
+};
+
+let selY = 30;
+
+function drawInventory() {
+    if (!invImgLoaded || !selectedInvImgLoaded) {
+        console.log("can't load inventory images!!!!!!\n paths: " + invImg.src + "\n" + selectedInvImg.src);
+        return;
+    }
+    ctx.drawImage(invImg, 30, 30, invImg.width/1.5, invImg.height/1.5);
+}
+
+
+
+function checkDigitPressed() {
+    if (digitPressed === 1) {
+        selY = 30;
+    } else if (digitPressed === 2) {
+        selY = 75;
+    } else if (digitPressed === 3) {
+        selY = 130;
+    } else if (digitPressed === 4) {
+        selY = 185;
+    }
+}
+
 
 function finish() {
     if (!finishImageLoaded) return;
@@ -55,6 +99,10 @@ function finish() {
 function update() { 
     if (map.curMapIndex === null) return;
 
+    player.selectedItem = digitPressed; // update selected item based on last digit key pressed
+    console.log("Selected item:", player.selectedItem);
+
+    checkDigitPressed();
 
     render.length = 0; // clear render array each frame
 
@@ -72,6 +120,8 @@ function update() {
                     // will read garbage data if go out of bounds, you don't want to go out of bounds, don't ya? -K
 
     renderAll();    // render everything from array
+
+    drawInventory(); 
 
     if (endLevel) finish();
 
