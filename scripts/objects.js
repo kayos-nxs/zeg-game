@@ -45,6 +45,9 @@ window.addEventListener('keydown', function(e) {
     } else if (e.code === 'Digit4') {
         digitPressed = 4;
     }
+    // } else if (e.code === 'Digit5') {
+        
+    // }
 });
 
 window.addEventListener('keyup', function(e) {
@@ -194,21 +197,26 @@ class Entity {
     }
 }
 
-
+// let items_img = 
 
 class Player extends Entity {
-    items=[];   // for future slots/inventory system
     selectedItem;
+    obtainedYellowKey = false;
+    obtainedPurpleKey = false;
 
-    constructor(x,y,hp,w,h,speed,items,color) {
+    constructor(x,y,hp,w,h,speed,color) {
         super(x,y,hp,w,h,speed,color);
-        this.items = items;
-        this.speed = 7;
-        this.selectedItem = null;
+        this.items = [];
+        this.speed = 4;
     }
 
 
     move() {
+        if (debug) {
+            this.obtainedPurpleKey = true; 
+            this.obtainedYellowKey = true;
+        
+        }
         let newX = this.x;      // set the value of current X and Y
         let newY = this.y;
 
@@ -237,27 +245,30 @@ class Player extends Entity {
                     if (!endLevel) {
                         // set endLevel and block movement immediately (synchronous)
                         endLevel = true;
-                        canMove = false;    // prevent player from moving after reaching finish until level changes
+                        canMove = false;                        // prevent player from moving after reaching finish until level changes
                     }
                 }
                 if (map.curMap[r][c] == 4) {
-                    this.items.push("yellow key");
-                    map.curMap[r][c] = 0;   // remove key from map
+                    this.obtainedYellowKey = true;
+                    map.curMap[r][c] = 0;                       // remove key from map
                 }
                 if (map.curMap[r][c] == 6) {
-                    this.items.push("purple key");
-                    map.curMap[r][c] = 0;   // remove key from map
+                    this.obtainedPurpleKey = true;
+                    map.curMap[r][c] = 0;                       // remove key from map
                 }
                 if (map.curMap[r][c] == 7) {
-                    if (this.items.includes("purple key")) {
-                        map.curMap[r][c] = 0;   // remove door from map
+                    if (this.obtainedPurpleKey) {
+                        map.curMap[r][c] = 0;                   // remove door from map
+                        this.obtainedPurpleKey = false;         // use up the key
                     } else {
                         canMove = false;
                     }
                 }
                 if (map.curMap[r][c] == 5) {
-                    if (this.items.includes("yellow key")) {
-                        map.curMap[r][c] = 0;   // remove door from map
+                    if (this.obtainedYellowKey) {
+                        map.curMap[r][c] = 0;                   // remove door from map
+                        this.obtainedYellowKey = false;         // use up the key
+                        this.items = this.items.filter(item => item !== "yellow key"); // remove from inventory
                     } else {
                         canMove = false;
                     }
