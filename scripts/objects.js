@@ -1,9 +1,5 @@
 const TILE_SIZE = 80;
 
-// objects to render
-const render = [];
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
 // footstep audio
 const footstepsAudio = new Audio("assets/footsteps.mp3");
 footstepsAudio.loop = true;
@@ -17,8 +13,11 @@ let cameraY = 0;
 let goingUp = false;
 let goingDown = false;
 let goingLeft = false;
-let goingRight = false;
-let debug = false;
+let goingRight = false; 
+let debug = false;      // for enabling/disabling debug
+let pressedE = false;   // for hitting enemy
+let holdingE = false;   // for checking if player is holding E key
+let pressedK = false;   // game over screen
 
 let digitPressed;
 
@@ -36,6 +35,9 @@ window.addEventListener('keydown', function(e) {
         goingRight = true;
     } else if (e.code === 'KeyF') {
         debug = !debug;
+    } else if (e.code === 'KeyE' && !holdingE) {
+        pressedE = true;
+        holdingE = true;
     } else if (e.code === 'Digit1') {
         digitPressed = 1;
     } else if (e.code === 'Digit2') {
@@ -45,9 +47,6 @@ window.addEventListener('keydown', function(e) {
     } else if (e.code === 'Digit4') {
         digitPressed = 4;
     }
-    // } else if (e.code === 'Digit5') {
-        
-    // }
 });
 
 window.addEventListener('keyup', function(e) {
@@ -59,15 +58,20 @@ window.addEventListener('keyup', function(e) {
         goingDown = false;
     } else if (e.code === 'KeyD') {
         goingRight = false;
+    } else if (e.code === 'KeyE') {
+        holdingE = false;
+    } else if (e.code === 'KeyK') {
+        pressedK = true;
     }
 });
 
+// joke tile is a hidden trigger/tile that adds a key on map where it 
+// should be, so player has to go back :D
 let jokeTileWalkedOn = false;
-
 function activateJoke(map) {
     // for map3
-    if (jokeTileWalkedOn) return; // prevent re-activating the joke if already activated
-    if (!jokeTileWalkedOn) console.log("Activated joke tile!");
+    if (jokeTileWalkedOn) return; 
+    if (!jokeTileWalkedOn) console.log("player pressed the hidden button");
     jokeTileWalkedOn = true;
 
     map[7][8] = 4;
@@ -103,7 +107,7 @@ class Map {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [2, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1],
         [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1],
-        [1, 0, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 8, 1],
         [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
         [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 6, 1, 0, 1],
         [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1],
@@ -116,7 +120,7 @@ class Map {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
 
-    map3 = [    // 7x8
+    map3 = [    
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
         [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
@@ -131,10 +135,28 @@ class Map {
         [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
         [1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 7, 3],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ];
+    ];
+
+    mapTest = [
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,8,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+    ];
 
     maps = [this.map1, this.map2, this.map3];
-    curMapIndex = 2;
+    curMapIndex = 1;
     curMap = this.maps[this.curMapIndex]     // to set different maps in the future
 
     draw() {
@@ -147,26 +169,27 @@ class Map {
                     curColor = "red";
                 } else if (this.curMap[i][j] === 2){      // if start, set color to green
                     curColor = "green";
-                } else if (this.curMap[i][j] === 4){     
-                    curColor = "rgb(255, 254, 169)";
-                } else if (this.curMap[i][j] === 5){      
-                    curColor = "yellow";
-                } else if (this.curMap[i][j] === 6){     
-                    curColor = "rgb(168, 121, 221)";
-                } else if (this.curMap[i][j] === 7){      
+                } else if (this.curMap[i][j] === 7){      // purple door
                     curColor = "purple";
-                } else if (this.curMap[i][j] === 9){      
+                } else if (this.curMap[i][j] === 5){      // yellow door
+                    curColor = "yellow";
+                } else if (this.curMap[i][j] === 9){      // trigger/tile
                     curColor = "gray";
                 
                 } else {
                     curColor = "gray";
                 }
 
-                // add to render array with camera offset
-                render.push({x: j * TILE_SIZE - cameraX, y: i * TILE_SIZE - cameraY, color: curColor, w: TILE_SIZE, h: TILE_SIZE});     
-        
-
-                // ctx.fillRect(j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                ctx.fillStyle = curColor;
+                ctx.fillRect(j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY, TILE_SIZE, TILE_SIZE);
+            
+                if (this.curMap[i][j] === 4){      // yellow key
+                    if (keyImgLoaded) ctx.drawImage(keyImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
+                } else if (this.curMap[i][j] === 6){      // purple key
+                    if (purpleKeyImgLoaded) ctx.drawImage(purpleKeyImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
+                } else if (this.curMap[i][j] === 8){      // sword
+                    if (swordLoaded) ctx.drawImage(swordImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
+                }
             }
         }
     }
@@ -200,6 +223,8 @@ class Entity {
     h;
     speed;
     color;
+    distanceEnt;
+    destroyed = false;
 
     constructor(x,y,hp,w,h,speed,color) {
         this.x = x;
@@ -210,45 +235,110 @@ class Entity {
         this.speed = speed;
         this.color = color;
     }
-}
 
-// let items_img = 
+
+    canMoveTo(newX, newY) {
+        const tileRow1 = Math.floor(newY / TILE_SIZE);
+        const tileRow2 = Math.floor((newY + this.h - 1) / TILE_SIZE);
+        const tileCol1 = Math.floor(newX / TILE_SIZE);
+        const tileCol2 = Math.floor((newX + this.w - 1) / TILE_SIZE);
+
+        for (let r = tileRow1; r <= tileRow2; r++) {
+            for (let c = tileCol1; c <= tileCol2; c++) {
+                if (!map.curMap[r] || map.curMap[r][c] === undefined) return false;
+                if (map.curMap[r][c] === 1) {
+                    return false;
+                }
+                if (map.curMap[r][c] === 7 || map.curMap[r][c] === 5) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    move(target) {
+        if (this.destroyed) return;
+
+        let newX = this.x;
+        let newY = this.y;
+
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const distance = Math.hypot(dx, dy);
+        this.distanceEnt = distance;
+
+        if (target) {
+            if (debug) console.log("enemy distance to player:", distance);
+            
+            if (distance > 0) {
+                const step = Math.min(this.speed, distance);
+                newX += dx / distance * step;
+                newY += dy / distance * step;
+            }
+        } else {
+            newX += 2;
+            newY += 2;
+        }
+
+        if (pressedE && player.selectedItem == 3) {
+            if (distance <= 100) {
+                newX += 20;
+                newY += 20;
+                this.hp -= 1;
+            }
+        }
+
+        if (this.canMoveTo(newX, newY)) {
+            this.x = newX;
+            this.y = newY;
+        }
+
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x - cameraX, this.y - cameraY, this.w, this.h);
+    }
+
+
+
+}
 
 class Player extends Entity {
     selectedItem;
     obtainedYellowKey = false;
     obtainedPurpleKey = false;
+    obtainedSword = false;
 
     constructor(x,y,hp,w,h,speed,color) {
         super(x,y,hp,w,h,speed,color);
-        this.items = [];
         this.speed = 4;
     }
-
 
     move() {
         if (debug) {
             this.obtainedPurpleKey = true; 
             this.obtainedYellowKey = true;
-        
+            this.obtainedSword = true;
+            console.log(this.x, this.y);
         }
-        let newX = this.x;      // set the value of current X and Y
+
+        // set the value of current X and Y
+        let newX = this.x;      
         let newY = this.y;
 
-        if (goingUp) newY -= this.speed;                        // update new X and Y based on movement flags using player's speed
+        // update new X and Y based on movement flags using player's speed
+        if (goingUp) newY -= this.speed;                        
         if (goingDown) newY += this.speed;
         if (goingLeft) newX -= this.speed;
         if (goingRight) newX += this.speed;
 
-        const tileRow1 = Math.floor(newY / TILE_SIZE);          // calculate tile coordinates for collision detection
+        // calculate tile coordinates for collision detection
+        const tileRow1 = Math.floor(newY / TILE_SIZE);          
         const tileRow2 = Math.floor((newY + this.h - 1) / TILE_SIZE);
         const tileCol1 = Math.floor(newX / TILE_SIZE);
         const tileCol2 = Math.floor((newX + this.w - 1) / TILE_SIZE);
-        
 
-        // 2 - start    0 - empty   6 - purple key      4 - yellow key   
-        // 3 - finish   1 - wall    7 - purple door     5 - yellow door
-
+        // now check what tile player has stepped it
         const moved = newX !== this.x || newY !== this.y;       // check if player is really moving and not standing still
         let canMove = true;
         for (let r = tileRow1; r <= tileRow2; r++) {            // check all tiles the player would occupy after moving
@@ -258,7 +348,6 @@ class Player extends Entity {
                 }
                 if (map.curMap[r][c] === 3) {                   // if any of those tiles is a finish - end the level
                     if (!endLevel) {
-                        // set endLevel and block movement immediately (synchronous)
                         endLevel = true;
                         canMove = false;                        // prevent player from moving after reaching finish until level changes
                     }
@@ -274,6 +363,7 @@ class Player extends Entity {
                 if (map.curMap[r][c] == 9) {
                     activateJoke(map.curMap);
                 }
+                
                 if (map.curMap[r][c] == 7) {
                     if (this.obtainedPurpleKey) {
                         map.curMap[r][c] = 0;                   // remove door from map
@@ -282,11 +372,18 @@ class Player extends Entity {
                         canMove = false;
                     }
                 }
+                if (map.curMap[r][c] == 8) {                    // pick up sword and remove from map
+                    this.obtainedSword = true;
+                    document.getElementById("rectangle_title").textContent = "Żeby uderzyć naciśnij E";
+                    setTimeout(() => {
+                        document.getElementById("rectangle_title").textContent = "Zeg Game";
+                    }, 2000);
+                    map.curMap[r][c] = 0;                       // remove key from map
+                }
                 if (map.curMap[r][c] == 5) {
                     if (this.obtainedYellowKey) {
                         map.curMap[r][c] = 0;                   // remove door from map
                         this.obtainedYellowKey = false;         // use up the key
-                        this.items = this.items.filter(item => item !== "yellow key"); // remove from inventory
                     } else {
                         canMove = false;
                     }
@@ -307,23 +404,7 @@ class Player extends Entity {
             }
         }
 
-        // add player to render array with camera offset
-        render.push({x: c.width/2 - this.w/2, y: c.height/2 - this.h/2, color: this.color, w: this.w, h: this.h});
-    }
-}
-
-
-
-function renderAll() {
-    // this function renders everything from the render array to the canvas each frame
-
-    // console.log("renderAll() xddddddd");
-    ctx.clearRect(0, 0, c.width, c.height);     // clear canvas before drawing  
-    ctx.fillStyle = "black";                    // background color behind the map
-    ctx.fillRect(0, 0, c.width, c.height);
-
-    for (const obj of render) {     // draw every object in the render array
-        ctx.fillStyle = obj.color;
-        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);   
+        ctx.fillStyle = this.color;
+        ctx.fillRect(c.width/2 - this.w/2, c.height/2 - this.h/2, this.w, this.h);
     }
 }

@@ -9,7 +9,7 @@
 body {
     background-color: rgb(7, 7, 7)
 }
-.rectangle {
+#rectangle, #rectangle_title {
     width: 600px;
     height: 100px;
     background: silver;
@@ -37,24 +37,31 @@ canvas {
     height: 90vh;          
     width: 96vw;         
 } 
+
+/* #reset {
+    visibility:hidden;
+} */
 </style>
 
 <body>
     <div class="container"> <!-- Main container -->
         <div class="mainGame"> <!-- Game container -->
 
-            <h1 class="rectangle">Zeg Game</h1> 
+            <h1 id="rectangle_title">Zeg Game</h1> 
             
             <canvas id="myCanvas" width="600" height="550"></canvas>
             
-            <div class="rectangle">
-                <button onclick="update();" style="width: 200px; height: 50px;">Graj</button>   <!-- Placeholder -->
+            <div id="rectangle">
+                <button id="play" onclick="startGame();" style="width: 200px; height: 50px;">Graj</button>    
+                <button id="reset" onclick="resetGame();" style="width: 200px; height: 50px;">Zresetuj</button>  
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
+    <script src="scripts/images.js"></script>
     <script src="scripts/objects.js"></script>
+    <script src="scripts/gameStates.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/main.js"></script>
     

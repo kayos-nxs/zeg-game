@@ -4,62 +4,30 @@
 const c = document.getElementById("myCanvas"); 
 const ctx = c.getContext("2d");
 
+let resetPressed = false;
+let lastEnemyDamageTime = 0;
+
+// for checking if user pressed "play" button
+// because if he double click it, the game will speedup
+let updatePressed = false;  
+                            
+let levelChanging = false;
+let selY = 27;
+
 //////////////////////////////////////////////////////////////////////////////////
 // OBJECTS                                                                       /
 //////////////////////////////////////////////////////////////////////////////////
 const map = new Map();  // create map object
 
-//                        x   y  hp  w   h   s   color  
-const player = new Player(80, 80, 5, 40, 40, 5, "blue");   // create player object
+const player = new Player(80, 80, 5, 40, 40, 10, "blue");   // create player object
 player.selectedItem = 1;
 
-//////////////////////////////////////////////////////////////////////////////////
-// TEXTURES                                                                      /
-//////////////////////////////////////////////////////////////////////////////////
-const finishImage = new Image();        // FINISH LEVEL TEXTURE
-finishImage.src = "assets/have passed_pl.png";
-let finishImageLoaded = false;
-finishImage.onload = () => {
-    finishImageLoaded = true;
-};
-let levelChanging = false;
-
-const invImg = new Image();             // INVENTORY GRID TEXTURE
-invImg.src = "assets/gui/inv.png";
-let invImgLoaded = false;
-invImg.onload = () => {
-    invImgLoaded = true;
-};
-
-const keyImg = new Image();             // YELLOW KEY TEXTURE
-keyImg.src = "assets/gui/key.png";
-let keyImgLoaded = false;
-keyImg.onload = () => {
-    keyImgLoaded = true;
-};
-
-const purpleKeyImg = new Image();       // PURPLE KEY TEXTURE
-purpleKeyImg.src = "assets/gui/purple_key.png";
-let purpleKeyImgLoaded = false;
-purpleKeyImg.onload = () => {
-    purpleKeyImgLoaded = true;
-};
-
-const selectedInvImg = new Image();     // SELECTED ITEM TEXTURE
-selectedInvImg.src = "assets/gui/selected.png";
-let selectedInvImgLoaded = false;
-selectedInvImg.onload = () => {
-    selectedInvImgLoaded = true;
-};
-
-const visionLimit = new Image();     // VISION LIMIT TEXTURE
-visionLimit.src = "assets/cant see.png";
-let visionLimitLoaded = false;
-visionLimit.onload = () => {
-    visionLimitLoaded = true;
-};
-
-let selY = 27;
+const enemy = new Entity(10000, 0, 3, 40, 40, 1, "red");   // create enemy object
+// if (map.curMapIndex === 1 || map.curMapIndex === 2) {    
+//     enemy.x = 920;
+//     enemy.y = 974;
+//     console.log("spawned enemy at: ", enemy.x, " and ", enemy.y);
+// }
 
 //////////////////////////////////////////////////////////////////////////////////
 // DRAWING                                                                       /
@@ -71,7 +39,7 @@ function drawGUI() {
         return;
     }
 
-    // ctx.drawImage(visionLimit, c.width/2 - visionLimit.width/2 - 20, c.height/2 - visionLimit.height/2);
+    ctx.drawImage(visionLimit, c.width/2 - visionLimit.width/2 - 20, c.height/2 - visionLimit.height/2);
 
     // INVENTORY
     if (!invImgLoaded || !selectedInvImgLoaded) {
@@ -82,8 +50,8 @@ function drawGUI() {
     ctx.drawImage(invImg, 30, 30, invImg.width/1.5, invImg.height/1.5);
     ctx.drawImage(selectedInvImg, 27, selY, selectedInvImg.width/1.5, selectedInvImg.height/1.5);
 
-    if (!keyImgLoaded || !purpleKeyImgLoaded) {
-        console.log("can't load inventory items!!!!!!\n paths: " + keyImg.src + "\n" + purpleKeyImg.src + "\n");
+    if (!keyImgLoaded || !purpleKeyImgLoaded || !swordLoaded) {
+        console.log("can't load inventory items!!!!!!\n paths: " + keyImg.src + "\n" + purpleKeyImg.src + "\n" + swordImg.src + "\n");
         return;
     }
     
@@ -93,15 +61,16 @@ function drawGUI() {
     if (player.obtainedPurpleKey) {
         ctx.drawImage(purpleKeyImg, (invImg.width/1.5)/2 + 5, 83, purpleKeyImg.width/1.5, purpleKeyImg.height/1.5);
     }
-
-    
+    if (player.obtainedSword) {
+        ctx.drawImage(swordImg, (swordImg.width/1.5)/2 - 10, 120);
+    }
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // CHECK EVERY FRAME                                                             /
 //////////////////////////////////////////////////////////////////////////////////
-function checkDigitPressed() {
+function checkKeysPressed() {
     if (digitPressed === 1) {
         selY = 27;
     } else if (digitPressed === 2) {
@@ -111,58 +80,50 @@ function checkDigitPressed() {
     } else if (digitPressed === 4) {
         selY = 185;
     }
-}
 
-//////////////////////////////////////////////////////////////////////////////////
-// FINISH AND LOAD MAP                                                           /
-//////////////////////////////////////////////////////////////////////////////////
-function finish() {
-    if (!finishImageLoaded) return;
-    // always draw the image while ending so it's visible each frame
-    ctx.drawImage(finishImage, c.width/2 - finishImage.width/2, c.height/2 - finishImage.height/2);
-
-    if (map.curMapIndex === map.maps.length - 1) {
-        map.curMapIndex = null;
-        return;
+    if (pressedE && debug) {
+        console.log("E key is pressed!"); 
     }
-
-    if (levelChanging) return;
-    levelChanging = true;
-
-    // wait a short moment, then advance the level and reset state
-    sleep(1000).then(() => {
-        map.curMapIndex++;
-        if (map.curMapIndex >= map.maps.length) map.curMapIndex = 0; // wrap or stop at end
-        map.curMap = map.maps[map.curMapIndex];
-
-        // reposition player to the start tile (value 2)
-        for (let i = 0; i < map.rows; i++) {
-            for (let j = 0; j < map.cols; j++) {
-                if (map.curMap[i][j] === 2) {
-                    player.x = j * TILE_SIZE;
-                    player.y = i * TILE_SIZE;
-                }
-            }
-        }
-
-        endLevel = false;
-        levelChanging = false;
-    });
 }
 
+
+function runEnemyChecks() {
+    if (enemy.hp <= 0) {
+        enemy.destroyed = true;
+    }
+    
+    enemy.move(player);
+
+    if ((enemy.distanceEnt <= 40 && enemy.distanceEnt >= 0) && Date.now() - lastEnemyDamageTime >= 1000) {
+        player.hp -= 1;
+        lastEnemyDamageTime = Date.now();
+    }
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 // UPDATE                                                                        /
 //////////////////////////////////////////////////////////////////////////////////
+function startGame() {
+    if (updatePressed) return;
+
+    updatePressed = true;
+    requestAnimationFrame(update);
+}
+
 function update() { 
+    if (!updatePressed) return;
+
+    // it wont load any map if index is null. (0-2)
     if (map.curMapIndex === null) return;
 
-    player.selectedItem = digitPressed; // update selected item based on last digit key pressed
-    console.log("Selected item:", player.selectedItem, "Obtained yellow key:", player.obtainedYellowKey, "Obtained purple key:", player.obtainedPurpleKey);
+    // update selected item based on last digit key pressed
+    player.selectedItem = digitPressed; 
 
-    checkDigitPressed();
+    checkKeysPressed();
 
-    render.length = 0; // clear render array each frame
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, c.width, c.height);
 
     // adjust camera position
     cameraX = player.x - c.width/2 + player.w/2;
@@ -170,17 +131,23 @@ function update() {
 
     map.draw();     // draw map first so player is on top
 
-    // map.drawGrid(c.width, c.height);    // draw a map grid
-    if (!endLevel) player.move();  // run checks for player movement (disabled while ending)
-                    // disables checks for collision if debug (F) key is pressed, but still if you touch finish (red) square it will finish the level.
-                    // will read garbage data if go out of bounds, you don't want to go out of bounds, don't ya? -K
+    if (!endLevel) {
+        if (!player.destroyed) player.move();  // run checks for player movement (disabled while ending)
+                        // disables checks for collision if debug (F) key is pressed, but still if you touch finish (red) square it will finish the level.
+                        // will read garbage data if go out of bounds, you don't want to go out of bounds, don't ya? -K
 
-    renderAll();    // render everything from array
-
+        if (!enemy.destroyed) runEnemyChecks();
+    }
+    
     drawGUI(); 
 
+    if (player.hp <= 0 || pressedK) gameOver();
     if (endLevel) finish();
+    
 
+    pressedE = false;
+
+    if (debug) console.log(map.curMapIndex);
 
     requestAnimationFrame(update); // call game loop again
 }
