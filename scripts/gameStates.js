@@ -2,6 +2,7 @@
 // FINISH AND LOAD MAP                                                           /
 //////////////////////////////////////////////////////////////////////////////////
 function finish() {
+    backgroundSFX.pause();
     if (!finishImageLoaded) return;
 
     // always draw the image while ending so it's visible each frame
@@ -35,6 +36,7 @@ function finish() {
         player.obtainedYellowKey = false;
         player.obtainedPurpleKey = false;
 
+        backgroundSFX.play();
         endLevel = false;
         levelChanging = false;
     });
@@ -154,6 +156,7 @@ function resetGame() {
 
 function gameOver() {
     if (!gameOverImgLoaded) return;
+    backgroundSFX.pause();
     
     if (!resetPressed) {
         ctx.drawImage(gameOverImg, c.width/2 - gameOverImg.width/2, c.height/2 - gameOverImg.height/2);

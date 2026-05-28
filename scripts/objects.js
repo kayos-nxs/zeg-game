@@ -85,7 +85,7 @@ class Map {
 
     // 2 - start    0 - empty   6 - purple key      4 - yellow key   
     // 3 - finish   1 - wall    7 - purple door     5 - yellow door
-    // 9 - jk
+    // 9 - jk       -1 - HP
     map1 = [   
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
@@ -105,7 +105,7 @@ class Map {
 
     map2 = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [2, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1],
+        [2, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1, 0, -1, 1],
         [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1],
         [1, 0, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 8, 1],
         [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
@@ -137,23 +137,23 @@ class Map {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
 
-    mapTest = [
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,8,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    // mapTest = [
+    //     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    //     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,8,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+    //     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    //     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 
-    ];
+    // ];
 
     maps = [this.map1, this.map2, this.map3];
     curMapIndex = 1;
@@ -175,7 +175,6 @@ class Map {
                     curColor = "yellow";
                 } else if (this.curMap[i][j] === 9){      // trigger/tile
                     curColor = "gray";
-                
                 } else {
                     curColor = "gray";
                 }
@@ -189,6 +188,8 @@ class Map {
                     if (purpleKeyImgLoaded) ctx.drawImage(purpleKeyImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
                 } else if (this.curMap[i][j] === 8){      // sword
                     if (swordLoaded) ctx.drawImage(swordImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
+                } else if (this.curMap[i][j] === -1){      // sword
+                    if (hpIMGLoaded) ctx.drawImage(hpIMG, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
                 }
             }
         }
@@ -226,10 +227,10 @@ class Entity {
     distanceEnt;
     destroyed = false;
 
-    constructor(x,y,hp,w,h,speed,color) {
+    constructor(x,y,w,h,speed,color) {
         this.x = x;
         this.y = y;
-        this.hp = hp;
+        this.hp = 3;
         this.w = w;
         this.h = h;
         this.speed = speed;
@@ -308,10 +309,12 @@ class Player extends Entity {
     obtainedYellowKey = false;
     obtainedPurpleKey = false;
     obtainedSword = false;
+    obtainedHP = false;
 
-    constructor(x,y,hp,w,h,speed,color) {
+    constructor(x,y,w,h,speed,color) {
         super(x,y,hp,w,h,speed,color);
         this.speed = 4;
+        this.hp = 5;
     }
 
     move() {
@@ -319,6 +322,7 @@ class Player extends Entity {
             this.obtainedPurpleKey = true; 
             this.obtainedYellowKey = true;
             this.obtainedSword = true;
+            this.obtainedHP = true;
             console.log(this.x, this.y);
         }
 
@@ -352,19 +356,23 @@ class Player extends Entity {
                         canMove = false;                        // prevent player from moving after reaching finish until level changes
                     }
                 }
-                if (map.curMap[r][c] == 4) {
+                if (map.curMap[r][c] === 4) {
                     this.obtainedYellowKey = true;
                     map.curMap[r][c] = 0;                       // remove key from map
                 }
-                if (map.curMap[r][c] == 6) {
+                if (map.curMap[r][c] === 6) {
                     this.obtainedPurpleKey = true;
                     map.curMap[r][c] = 0;                       // remove key from map
                 }
-                if (map.curMap[r][c] == 9) {
+                if (map.curMap[r][c] === -1) {
+                    this.obtainedHP = true;
+                    map.curMap[r][c] = 0;                       // remove hp bottle from map
+                }
+                if (map.curMap[r][c] === 9) {
                     activateJoke(map.curMap);
                 }
                 
-                if (map.curMap[r][c] == 7) {
+                if (map.curMap[r][c] === 7) {
                     if (this.obtainedPurpleKey) {
                         map.curMap[r][c] = 0;                   // remove door from map
                         this.obtainedPurpleKey = false;         // use up the key
@@ -372,7 +380,7 @@ class Player extends Entity {
                         canMove = false;
                     }
                 }
-                if (map.curMap[r][c] == 8) {                    // pick up sword and remove from map
+                if (map.curMap[r][c] === 8) {                    // pick up sword and remove from map
                     this.obtainedSword = true;
                     document.getElementById("rectangle_title").textContent = "Żeby uderzyć naciśnij E";
                     setTimeout(() => {
@@ -380,7 +388,7 @@ class Player extends Entity {
                     }, 2000);
                     map.curMap[r][c] = 0;                       // remove key from map
                 }
-                if (map.curMap[r][c] == 5) {
+                if (map.curMap[r][c] === 5) {
                     if (this.obtainedYellowKey) {
                         map.curMap[r][c] = 0;                   // remove door from map
                         this.obtainedYellowKey = false;         // use up the key

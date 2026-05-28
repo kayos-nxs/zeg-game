@@ -4,6 +4,13 @@
 const c = document.getElementById("myCanvas"); 
 const ctx = c.getContext("2d");
 
+var backgroundSFX = new Audio('assets/background.mp3'); 
+backgroundSFX.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+}, false);
+
+
 let resetPressed = false;
 let lastEnemyDamageTime = 0;
 
@@ -19,10 +26,10 @@ let selY = 27;
 //////////////////////////////////////////////////////////////////////////////////
 const map = new Map();  // create map object
 
-const player = new Player(80, 80, 5, 40, 40, 10, "blue");   // create player object
+const player = new Player(80, 80, 40, 40, 10, "blue");   // create player object
 player.selectedItem = 1;
 
-const enemy = new Entity(10000, 0, 3, 40, 40, 1, "red");   // create enemy object
+const enemy = new Entity(10000, 0, 40, 40, 1, "red");   // create enemy object
 // if (map.curMapIndex === 1 || map.curMapIndex === 2) {    
 //     enemy.x = 920;
 //     enemy.y = 974;
@@ -64,6 +71,9 @@ function drawGUI() {
     if (player.obtainedSword) {
         ctx.drawImage(swordImg, (swordImg.width/1.5)/2 - 10, 120);
     }
+    if (player.obtainedHP) {
+        ctx.drawImage(hpIMG, (hpIMG.width/1.5)/2 + 5, 190, hpIMG.width/1.5, hpIMG.height/1.5);
+    }
 }
 
 
@@ -83,6 +93,11 @@ function checkKeysPressed() {
 
     if (pressedE && debug) {
         console.log("E key is pressed!"); 
+    }
+
+    if (pressedE && player.selectedItem === 4) {
+        if (player.hp < 5) player.hp+=30;
+        if (player.hp > 5) player.hp=5;
     }
 }
 
@@ -106,6 +121,7 @@ function runEnemyChecks() {
 function startGame() {
     if (updatePressed) return;
 
+    backgroundSFX.play();
     updatePressed = true;
     requestAnimationFrame(update);
 }

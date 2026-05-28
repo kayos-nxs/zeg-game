@@ -1,5 +1,5 @@
 const finishImage = new Image();        // FINISH LEVEL TEXTURE
-finishImage.src = "assets/have passed_pl.png";
+finishImage.src = "assets/gui/have passed_pl.png";
 let finishImageLoaded = false;
 finishImage.onload = () => {
     finishImageLoaded = true;
@@ -7,7 +7,7 @@ finishImage.onload = () => {
 
 
 const gameOverImg = new Image();        // GAME OVER TEXTURE
-gameOverImg.src = "assets/game over_pl.png";
+gameOverImg.src = "assets/gui/game over_pl.png";
 let gameOverImgLoaded = false;
 gameOverImg.onload = () => {
     gameOverImgLoaded = true;
@@ -42,7 +42,7 @@ selectedInvImg.onload = () => {
 };
 
 const visionLimit = new Image();     // VISION LIMIT TEXTURE
-visionLimit.src = "assets/cant see.png";
+visionLimit.src = "assets/gui/cant see.png";
 let visionLimitLoaded = false;
 visionLimit.onload = () => {
     visionLimitLoaded = true;
@@ -53,4 +53,11 @@ swordImg.src = "assets/gui/sword.png";
 let swordLoaded = false;
 swordImg.onload = () => {
     swordLoaded = true;
+};
+
+const hpIMG = new Image();          // HP BOTTLE TEXTURE
+hpIMG.src = "assets/gui/hpBottle.png";
+let hpIMGLoaded = false;
+hpIMG.onload = () => {
+    hpIMG = true;
 };
