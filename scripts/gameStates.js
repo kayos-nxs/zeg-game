@@ -1,23 +1,22 @@
-//////////////////////////////////////////////////////////////////////////////////
-// FINISH AND LOAD MAP                                                           /
-//////////////////////////////////////////////////////////////////////////////////
+// when player finished map, the game will end
+// and after a short moment, it will load the next map
 function finish() {
     backgroundSFX.pause();
     if (!finishImageLoaded) return;
 
-    // always draw the image while ending so it's visible each frame
+    // draw finish screen each frame
     ctx.drawImage(finishImage, c.width/2 - finishImage.width/2, c.height/2 - finishImage.height/2);
 
     if (levelChanging) return;
     levelChanging = true;
 
-    // wait a short moment, then advance the level and reset state
+    // wait then advance to next level
     sleep(1000).then(() => {
         map.curMapIndex++;
-        if (map.curMapIndex >= map.maps.length) map.curMapIndex = 0; // wrap or stop at end
+        if (map.curMapIndex >= map.maps.length) map.curMapIndex = 0;
         map.curMap = map.maps[map.curMapIndex];
 
-        // reposition player to the start tile (value 2)
+        // find start tile and reposition player
         for (let i = 0; i < map.rows; i++) {
             for (let j = 0; j < map.cols; j++) {
                 if (map.curMap[i][j] === 2) {
@@ -27,26 +26,30 @@ function finish() {
             }
         }
 
+        // spawn enemy on harder levels
         if (map.curMapIndex === 1 || map.curMapIndex === 2) {    
             enemy.x = 920;
             enemy.y = 974;
             if (debug) console.log("spawned enemy at: ", enemy.x, " and ", enemy.y);
         }
 
+        // reset keys
         player.obtainedYellowKey = false;
         player.obtainedPurpleKey = false;
 
-        backgroundSFX.play();
+        backgroundSFX.play();    
         endLevel = false;
         levelChanging = false;
     });
 }
 
+// reset all game variables to initial state
 function resetGame() {
     if (debug) console.log("reset!");
     resetPressed = true;
     map.curMapIndex = 0;
 
+    // restore map1 layout
     if (debug) console.log("change map1 back");
     map.map1 = [   
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -83,6 +86,7 @@ function resetGame() {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
 
+    // restore map3 layout
     if (debug) console.log("change map3 back");
     map.map3 = [    
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -101,14 +105,16 @@ function resetGame() {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
 
+    // bind all maps together
     if (debug) console.log("setting up maps");
     map.maps = [map.map1, map.map2, map.map3, map.mapTest];
     map.curMap = map.maps[map.curMapIndex];
 
+    // restore player state
     if (debug) console.log("change player back");
     player.x = 80;
     player.y = 80;
-    player.hp = 5;
+    player.hp = 6;
     player.distanceEnt = undefined;
     player.selectedItem = 1;
     player.obtainedYellowKey = false;
@@ -116,6 +122,7 @@ function resetGame() {
     player.obtainedSword = false;
     player.destroyed = false;
 
+    // restore enemy state
     console.log("change enemy back");
     enemy.x = 10000;
     enemy.y = 0;
@@ -123,6 +130,7 @@ function resetGame() {
     enemy.distanceEnt = undefined;
     enemy.destroyed = false;
 
+    // reset keyboard input flags
     if (debug) console.log("change keyboard back");
     goingUp = false;
     goingDown = false;
@@ -132,6 +140,7 @@ function resetGame() {
     holdingE = false;
     digitPressed = 1;
 
+    // reset game state variables
     if (debug) console.log("change other vars back");
     selY = 27;
     endLevel = false;
@@ -139,10 +148,12 @@ function resetGame() {
     jokeTileWalkedOn = false;
     lastEnemyDamageTime = 0;
 
+    // reset camera position
     if (debug) console.log("change camera back");
     cameraX = player.x - c.width/2 + player.w/2;
     cameraY = player.y - c.height/2 + player.h/2;
 
+    // reset audio state
     if (debug) console.log("change footsteps back");
     if (!footstepsAudio.paused) {
         footstepsAudio.pause();
@@ -150,10 +161,12 @@ function resetGame() {
     }
 
     if (debug) console.log("start");
+    backgroundSFX.play();
     startGame();
 
 }
 
+// show game over screen and freeze game state
 function gameOver() {
     if (!gameOverImgLoaded) return;
     backgroundSFX.pause();
