@@ -191,6 +191,7 @@ class Map {
                 ctx.fillStyle = curColor;
                 ctx.fillRect(j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY, TILE_SIZE, TILE_SIZE);
             
+
                 // draw interactive item icons
                 if (this.curMap[i][j] === 4){
                     if (keyImgLoaded) ctx.drawImage(keyImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
@@ -204,6 +205,8 @@ class Map {
                     if (doorImgLoaded) ctx.drawImage(doorIMG, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
                 } else if (this.curMap[i][j] === 7){
                     if (purpleDoorImgLoaded) ctx.drawImage(purpleDoorIMG, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
+                } else if (this.curMap[i][j] === 0 || this.curMap[i][j] === 9){
+                    if (floorImgLoaded) ctx.drawImage(floorImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
                 }
             }
         }
