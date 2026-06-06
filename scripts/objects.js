@@ -1,46 +1,5 @@
 const TILE_SIZE = 80;
 
-// footstep audio for player movement
-const footstepsAudio = new Audio("assets/footsteps2.mp3");
-footstepsAudio.loop = true;
-footstepsAudio.volume = 0.5;
-
-// the sound of a door opening for yellow and purple doors
-const opendoorAudio = new Audio("assets/opendoor.mp3");
-opendoorAudio.volume = 0.5;
-
-// key interaction sound (pickup / use / selection)
-const keySoundAudio = new Audio("assets/keySound.mp3");
-keySoundAudio.volume = 0.7;
-
-// potion pickup sound
-const pickupPotionAudio = new Audio("assets/pickupPotion.mp3");
-pickupPotionAudio.volume = 0.7;
-
-// sword pickup sound
-const swordPickupAudio = new Audio("assets/swordPickup.mp3");
-swordPickupAudio.volume = 0.9;
-
-// sword swing/attack sound
-const swordSwingAudio = new Audio("assets/swordSwing.mp3");
-swordSwingAudio.volume = 0.7;
-
-// debug/test music or sound
-const debugAudio = new Audio("assets/debugSong.mp3");
-debugAudio.volume = 0.1;
-
-// sound when enemy takes damage
-const damageToEnemyAudio = new Audio("assets/damageToEnemy.mp3");
-damageToEnemyAudio.volume = 0.5;
-
-// drinking potion sound 
-const drinkingSoundAudio = new Audio("assets/drinkingSound.mp3");
-drinkingSoundAudio.volume = 0.7;
-
-// next level transition sound
-const nextLevelAudio = new Audio("assets/nextLevel.mp3");
-nextLevelAudio.volume = 0.5;
-
 // camera position tracking
 let cameraX = 0;
 let cameraY = 0;
@@ -223,10 +182,6 @@ class Map {
                     curColor = "red";
                 } else if (this.curMap[i][j] === 2){
                     curColor = "green";
-                } else if (this.curMap[i][j] === 7){
-                    curColor = "purple";
-                } else if (this.curMap[i][j] === 5){
-                    curColor = "yellow";
                 } else if (this.curMap[i][j] === 9){
                     curColor = "gray";
                 } else {
@@ -245,6 +200,10 @@ class Map {
                     if (swordLoaded) ctx.drawImage(swordImg, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
                 } else if (this.curMap[i][j] === -1){
                     if (hpIMGLoaded) ctx.drawImage(hpIMG, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
+                } else if (this.curMap[i][j] === 5){
+                    if (doorImgLoaded) ctx.drawImage(doorIMG, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
+                } else if (this.curMap[i][j] === 7){
+                    if (purpleDoorImgLoaded) ctx.drawImage(purpleDoorIMG, j * TILE_SIZE - cameraX, i * TILE_SIZE - cameraY);
                 }
             }
         }
@@ -437,8 +396,6 @@ class Player extends Entity {
                     if (map.curMap[r][c] === 7) {
                         if (this.obtainedPurpleKey) {
                             map.curMap[r][c] = 0;
-                            opendoorAudio.currentTime = 0;
-                            opendoorAudio.play();
                             activatedPurpleDoor = true;
                             this.obtainedPurpleKey = false;
                         } else {
@@ -460,8 +417,6 @@ class Player extends Entity {
                     if (map.curMap[r][c] === 5) {
                         if (this.obtainedYellowKey) {
                             map.curMap[r][c] = 0;
-                            opendoorAudio.currentTime = 0;
-                            opendoorAudio.play();
                             activatedYellowDoor = true;
                             this.obtainedYellowKey = false;
                         } else {

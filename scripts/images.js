@@ -85,3 +85,17 @@ let halfHeartLoaded = false;
 halfHeartIMG.onload = () => {
     halfHeartLoaded = true;
 };
+
+const doorIMG = new Image();
+doorIMG.src = "assets/yellow_door.png";
+let doorImgLoaded = false;
+doorIMG.onload = () => {
+    doorImgLoaded = true;
+};
+
+const purpleDoorIMG = new Image();
+purpleDoorIMG.src = "assets/purple_door.png";
+let purpleDoorImgLoaded = false;
+purpleDoorIMG.onload = () => {
+    purpleDoorImgLoaded = true;
+};

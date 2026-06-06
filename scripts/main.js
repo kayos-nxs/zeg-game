@@ -5,12 +5,7 @@ const ctx = c.getContext("2d");
 // utility sleep function for delays
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// background music that loops
-var backgroundSFX = new Audio('assets/background.mp3'); 
-backgroundSFX.addEventListener('ended', function() {
-    this.currentTime = 0;
-    this.play();
-}, false);
+
 
 // math quiz variables
 let mathQuizActive = false;
@@ -35,6 +30,11 @@ const enemy = new Entity(10000, 0, "red");
 
 // initialize math quiz with random numbers
 function startMathQuiz() {
+    document.getElementById("rectangle_title").textContent = "Jak wpiszesz odpowiedź to naciśnij ENTER!";
+    setTimeout(() => {
+        document.getElementById("rectangle_title").textContent = "Zeg Game";
+    }, 2000);
+
     mathQuizActive = true;
     footstepsAudio.pause();
 
@@ -50,6 +50,8 @@ function finishMathQuiz() {
     activatedYellowDoor = false;
     activatedPurpleDoor = false;
     user_input = "";
+    opendoorAudio.currentTime = 0;
+    opendoorAudio.play();
 }
 
 // render quiz overlay with math problem
@@ -76,10 +78,19 @@ function handleMathQuizKeydown(event) {
         user_input = user_input.slice(0, -1);
     } else if (event.key === "Enter") {
         if (Number(user_input) === mathQuiz_answer) finishMathQuiz();
+        else {
+            user_input = "źle!";
+            // wrongAnswerAudio.stop();
+            wrongAnswerAudio.play();
+
+            setTimeout(() => {
+                user_input = "";
+            }, 500);
+        }
     } else if (/^[0-9]$/.test(event.key)) {
         user_input += event.key;
 
-        if (Number(user_input) === mathQuiz_answer) finishMathQuiz();
+        // if (Number(user_input) === mathQuiz_answer) finishMathQuiz();
     }
 }
 
