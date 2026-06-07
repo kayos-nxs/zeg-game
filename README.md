@@ -18,5 +18,5 @@
 — Żeby otworzyć grę trzeba otworzyć w przeglądarce plik index.html.
 <hr>
 <h2> Autorzy:</h2>
-— Kostia Korniienko;
-<br>— Danil Czebanow.
+— Konstiantyn Korniienko;
+<br>— Danil Chebanov.
