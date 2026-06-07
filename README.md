@@ -15,7 +15,7 @@
 <br>— Koniec jest 08/06/2026.
 <hr>
 <h2> Dokumentacja:</h2>
-— Żeby otworzyć grę trzeba otworzyć w przeglądarce plik index.html.
+— Żeby uruchomić grę trzeba otworzyć w przeglądarce plik index.html lub wejść na stronę internetową https://kayos-nxs.github.io/zeg-game/.
 <hr>
 <h2> Autorzy:</h2>
 — Konstiantyn Korniienko;
