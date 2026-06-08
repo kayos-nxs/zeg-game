@@ -7,13 +7,16 @@ function finish() {
     // draw finish screen each frame
     ctx.drawImage(finishImage, c.width/2 - finishImage.width/2, c.height/2 - finishImage.height/2);
 
+    if (map.curMapIndex === map.maps.length - 1) return;
+        
+
     if (levelChanging) return;
     levelChanging = true;
 
     // wait then advance to next level
     sleep(1000).then(() => {
+        // if (map.curMapIndex == map.maps.length) return;
         map.curMapIndex++;
-        if (map.curMapIndex >= map.maps.length) map.curMapIndex = 0;
         map.curMap = map.maps[map.curMapIndex];
 
         // find start tile and reposition player
